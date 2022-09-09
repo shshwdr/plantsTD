@@ -9,15 +9,16 @@ public class HPObject : MonoBehaviour
     public float currentHP;
     public bool isDead = false;
     public BattleItemInfo info;
-    HPBar hpbar;
+    public HPBar hpbar;
 
     public virtual void Start()
     {
         currentHP = maxhp;
-        hpbar = GetComponentInChildren<HPBar>();
+        //hpbar = GetComponentInChildren<HPBar>();
         if (hpbar)
         {
             hpbar.updateMaxAndCurrent(info.hp);
+            hpbar.gameObject.SetActive(false);
         }
     }
 
@@ -46,8 +47,13 @@ public class HPObject : MonoBehaviour
 
         if (hpbar)
         {
+            hpbar.gameObject.SetActive(true);
             hpbar.updateCurrent(currentHP);
         }
+    }
+    public virtual void kill()
+    {
+        isDead = true;
     }
 
     public virtual void die()

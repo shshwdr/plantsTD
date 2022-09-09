@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattlePlant : HPObject
+public class BattlePlant : HPObject,Harvestable
 {
     public string plantName;
     public PlantInfo plantInfo;
-    PlantPosition plantPosition;
+    public PlantPosition plantPosition;
     bool isDragging = false;
+
+
 
     public SpriteRenderer spriteRender;
 
-    void init()
+    public void init()
     {
         plantInfo = PlantManager.Instance.getPlantInfo(plantName);
         info = plantInfo;
         maxhp = currentHP = info.hp;
+
     }
 
     public void renderCanPlant()
@@ -30,7 +33,6 @@ public class BattlePlant : HPObject
     override public void Start()
     {
         base.Start();
-        init();
 
     }
 
@@ -58,7 +60,10 @@ public class BattlePlant : HPObject
         isDragging = false;
         plantPosition = pp;
         plantPosition.capture();
+        plantPosition.downgrade(plantInfo.minTileLevel);
         ResourceManager.Instance.consumeResource("orb", plantInfo.cost);
+        PlantManager.Instance.addPlant(this);
+        SFXManager.Instance.PlantSpawn();
     }
 
     public void startDragging()
@@ -81,19 +86,25 @@ public class BattlePlant : HPObject
     {
         base.die();
 
-        if (plantInfo.upgradeTile > 0)
-        {
-            plantPosition.upgrade(plantInfo.upgradeTile);
-        }
-
-        if (plantInfo.generation > 0)
-        {
-
-            var test = new List<PairInfo<int>>() { };
-            test.Add(new PairInfo<int>("orb", plantInfo.generation));
-            //CollectionManager.Instance.AddCoins(transform.position,test);
-            ClickToCollect.createClickToCollectItem(test, transform.position);
-        }
+        
         plantPosition.release();
+        PlantManager.Instance.removePlant(this);
+        Destroy(gameObject);
+    }
+
+    
+
+    public override void kill()
+    {
+        base.kill();
+        plantPosition.release();
+        PlantManager.Instance.removePlant(this);
+        Destroy(gameObject);
+
+    }
+    public void harvest(Human human)
+    {
+        getDamage(human.humanInfo.attack);
+        //kill();
     }
 }

@@ -96,6 +96,20 @@ public class Utils : MonoBehaviour
 
         return collider.bounds.Contains(minBound) && collider.bounds.Contains(maxBound);
     }
+
+    static public List<T> findAround<T>(Vector3 position, float radius, List<T> candicateTransforms) where T : MonoBehaviour
+    {
+        var res = new List<T>();
+        foreach(var t in candicateTransforms)
+        {
+            if ((t.transform.position - position).magnitude < radius)
+            {
+                res.Add(t);
+            }
+        }
+        return res;
+    }
+    
     static public int findClosestIndex<T>(Vector3 position, T[] candicateTransforms) where T : MonoBehaviour
     {
         int res = 0;
@@ -115,9 +129,18 @@ public class Utils : MonoBehaviour
         }
         return res;
     }
+
+    static public T findClosestItem<T>(Vector3 targetPosition, List<T> candicateTransforms) where T : MonoBehaviour
+    {
+        return findClosestItem(targetPosition, candicateTransforms.ToArray());
+    }
     static public T findClosestItem<T>(Vector3 targetPosition, T[] candicateTransforms) where T : MonoBehaviour
     {
         int res = 0;
+        if(candicateTransforms.Length == 0)
+        {
+            return null;
+        }
         float closestDistance = float.MaxValue;
         for (int i = 0; i < candicateTransforms.Length; i++)
         {

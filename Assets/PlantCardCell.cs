@@ -10,6 +10,7 @@ public class PlantCardCell : MonoBehaviour
     PlantInfo info;
     public Image plantImage;
     public Transform orbParent;
+    public Text tileLevel;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +24,7 @@ public class PlantCardCell : MonoBehaviour
         plantPrefab = Resources.Load<GameObject>("plant/" + type);
 
         plantImage.sprite = Resources.Load<Sprite>("plantIcon/" + type);
-
+        tileLevel.text = info.minTileLevel.ToString();
         int i = 0;
         var allOrbs =
             orbParent.GetComponentsInChildren<Image>();
@@ -73,6 +74,7 @@ public class PlantCardCell : MonoBehaviour
         {
 
             var go = Instantiate(plantPrefab);
+            go.GetComponent<BattlePlant>().init();
             MouseController.Instance.dragPlant(go.GetComponent<BattlePlant>());
         }
     }

@@ -66,13 +66,13 @@ public class GameLoopManager : Singleton<GameLoopManager>
         if (win)
         {
            // MessageMenu.Instance.show("Victory!");
-            SFXManager.Instance.playMonsterWinClip();
+           // SFXManager.Instance.playMonsterWinClip();
         }
         else
         {
 
            // MessageMenu.Instance.show("Faild!");
-            SFXManager.Instance.playHumanWinClip();
+           // SFXManager.Instance.playHumanWinClip();
         }
         EnemyManager.Instance.clear();
        // monster.restoreFromBattle();
@@ -123,7 +123,24 @@ public class GameLoopManager : Singleton<GameLoopManager>
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            restartGame();
         }
+    }
+
+    public void restartGame()
+    {
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    bool isGameOver = false;
+    public void gameover()
+    {
+        if (isGameOver)
+        {
+            return;
+        }
+        isGameOver = true;
+
+        PopupManager.Instance.showEvent("Game Over", () => { GameLoopManager.Instance.restartGame(); }, "Restart");
     }
 }

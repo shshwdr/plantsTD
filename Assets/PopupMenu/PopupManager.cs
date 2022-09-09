@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,6 +62,16 @@ public class PopupManager : Singleton<PopupManager>
 
         List<EventButtonInfo> simpleTwoOption = new List<EventButtonInfo>();
         //simpleTwoOption.Add(new EventButtonInfo(t, button1Text, null));
+        go.GetComponent<PopupMenu>().Init(t, simpleTwoOption);
+        go.GetComponent<PopupMenu>().showView();
+    }
+    public void showEvent(string t, Action action,string button1Text = "OK")
+    {
+        // only show one text and can close it.
+        var go = Instantiate(EventMenuPrefab, mainCanvas.transform);
+
+        List<EventButtonInfo> simpleTwoOption = new List<EventButtonInfo>();
+        simpleTwoOption.Add(new EventButtonInfo(t, action));
         go.GetComponent<PopupMenu>().Init(t, simpleTwoOption);
         go.GetComponent<PopupMenu>().showView();
     }

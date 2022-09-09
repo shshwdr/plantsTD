@@ -9,6 +9,7 @@ public class ResourceMenu : MonoBehaviour
 
     public Transform getCellTransform(string type)
     {
+        return cells[0].transform;
         switch (type)
         {
             case "meat":

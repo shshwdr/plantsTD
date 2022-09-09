@@ -19,6 +19,10 @@ public class CardMenu : MonoBehaviour
         int i = 0;
         foreach (var plant in PlantManager.Instance.plantInfos)
         {
+            if (plant.isLocked == 1)
+            {
+                continue;
+            }
             cells[i].gameObject.SetActive(true);
             cells[i].init(plant.type);
             i++;

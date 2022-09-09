@@ -11,13 +11,20 @@ public class PlantPosition : MonoBehaviour
     void Start()
     {
 
-        spriteRender.color = new Color(1, 1, 1, tileLevel / 4f);
+        spriteRender.color = new Color(0, 1,1, tileLevel / 4f);
     }
 
     public void upgrade(int level)
     {
         tileLevel += level;
-        spriteRender.color = new Color(1, 1, 1, tileLevel / 4f);
+        spriteRender.color = new Color(0, 1, 1, tileLevel / 4f);
+    }
+
+    public void downgrade(int level)
+    {
+
+        tileLevel -= level;
+        spriteRender.color = new Color(0, 1, 1, tileLevel / 4f);
     }
     public void capture()
     {

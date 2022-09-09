@@ -22,25 +22,8 @@ namespace Sinbad
         public static List<List<string>> LoadList(string filename, bool includeTitle)
         {
             //var dbPath = "Assets/StreamingAssets/" + filename;
-            string text = "";
-#if UNITY_EDITOR
-            var dbPath = path + filename;
 
-            text = Resources.Load<TextAsset>("csv/" + filename).text;
-#else
-            var m_path = Application.dataPath+ "/csv/" + filename+".csv";
-         if (File.Exists(m_path))
-         {
-             byte[] m_bytes = File.ReadAllBytes(m_path);
- 
-             text = System.Text.Encoding.UTF8.GetString(m_bytes);
- 
-             Debug.Log(text);
-         }else{
-            Debug.LogError(m_path);
-         }
-
-#endif
+            var text = Resources.Load<TextAsset>("csv/" + filename).text;
 
 
 
@@ -65,6 +48,65 @@ namespace Sinbad
                 foreach (var v in values)
                 {
                     obj.Add(v);
+                }
+                ret.Add(obj);
+            }
+            return ret;
+        }
+
+        public static List<List<Dictionary<string,int>>> LoadDictionaryList(string filename, bool includeTitle)
+        {
+            //var dbPath = "Assets/StreamingAssets/" + filename;
+
+            var text = Resources.Load<TextAsset>("csv/" + filename).text;
+
+
+
+            var splitFile = new string[] { "\r\n", "\r", "\n" };
+            var lines = text.Split(splitFile, StringSplitOptions.None);
+            int lineId = 0;
+            var ret = new List<List<Dictionary<string,int>>>();
+            if (includeTitle)
+            {
+
+                string header = lines[lineId];
+                lineId++;
+            }
+            while (lineId < lines.Length - 1)
+            {
+                string line = lines[lineId];
+                lineId++;
+                var obj = new List<Dictionary<string, int>>();
+                // box manually to avoid issues with structs
+                object boxed = obj;
+                string[] values = EnumerateCsvLine(line).ToArray();
+                foreach (var v in values)
+                {
+                    Dictionary<string, int> res = new Dictionary<string, int>();
+                    string[] pairs = v.Split('|');
+                    foreach (string pair in pairs)
+                    {
+                        string[] p = pair.Split(':');
+                        if (p.Length != 2)
+                        {
+                            Debug.LogError("error when parse pair" + pair + " in string: " + v);
+                            return ret;
+                        }
+                        if (res.ContainsKey(p[0]))
+                        {
+                            Debug.LogError("key " + p[0] + " has been defined multiple times in string: " + v);
+                        }
+
+                        int value;
+                        bool parse = int.TryParse(p[1], out value);
+                        if (!parse)
+                        {
+                            Debug.LogError("error when parse int " + p[1]);
+
+                        }
+                        res[p[0]] = value;
+                        obj.Add(res);
+                    }
                 }
                 ret.Add(obj);
             }

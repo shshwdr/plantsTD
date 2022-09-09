@@ -12,18 +12,21 @@ public class Human : HPObject
 
     float damageTime = 0.3f;
     float damageTimer = 0f;
+    public HumanInfo humanInfo;
     Animator animator;
 
     bool startAttack = false;
 
     float attackTimer = 0;
 
+    public SpriteRenderer intentSprite;
+
     public string type;
     // Start is called before the first frame update
     override public void Start()
     {
         base.Start();
-        transform.DOMoveX(1, 20f);
+        //transform.DOMoveX(1, 20f);
         animator = GetComponent<Animator>();
     }
 
@@ -31,9 +34,11 @@ public class Human : HPObject
     {
         this.type = type;
         //spriteRender.sprite = Resources.Load<Sprite>("human/" + type);
-       // weaponRender.sprite = Resources.Load<Sprite>("human/" + type+"_w");
-        info = EnemyManager.Instance.getEnemyInfo(type);
+        // weaponRender.sprite = Resources.Load<Sprite>("human/" + type+"_w");
+        humanInfo = EnemyManager.Instance.getEnemyInfo(type);
+        info = humanInfo;
         maxhp = currentHP = info.hp;
+        intentSprite.sprite = Resources.Load<Sprite>("intent/" + humanInfo.intent);
     }
 
     // Update is called once per frame
@@ -126,10 +131,12 @@ public class Human : HPObject
         }
     }
 
-   public void kill()
+   public override void kill()
     {
-        isDead = true;
+        base.kill();
         transform.DOKill();
+        EnemyManager.Instance.removeEnemy(this);
+        Destroy(gameObject);
     }
 
     public override void die()
@@ -137,7 +144,7 @@ public class Human : HPObject
         //transform.DOKill();
         //SFXManager.Instance.playDieClip();
         base.die();
-        EnemyManager.Instance.removeEnemy(gameObject);
+        EnemyManager.Instance.removeEnemy(this);
         //EnemyGeneratorManager.Instance.removeEnemy(gameObject);
         ////ResourceManager.Instance.changeAmount(info.dropItem, info.dropAmount*( Random.Range(1,4)));
         //var test = new List<PairInfo<int>>() { };
