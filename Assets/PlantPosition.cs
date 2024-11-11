@@ -7,24 +7,29 @@ public class PlantPosition : MonoBehaviour
     bool isUsed = false;
     int tileLevel = 0;
     public SpriteRenderer spriteRender;
+
+    void updateTileState()
+    {
+        spriteRender.color = new Color(0, 1, 1,( tileLevel+1) / 5f);
+
+    }
     // Start is called before the first frame update
     void Start()
     {
-
-        spriteRender.color = new Color(0, 1,1, tileLevel / 4f);
+        updateTileState();
     }
 
     public void upgrade(int level)
     {
         tileLevel += level;
-        spriteRender.color = new Color(0, 1, 1, tileLevel / 4f);
+        updateTileState();
     }
 
     public void downgrade(int level)
     {
 
         tileLevel -= level;
-        spriteRender.color = new Color(0, 1, 1, tileLevel / 4f);
+        updateTileState();
     }
     public void capture()
     {

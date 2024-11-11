@@ -86,6 +86,10 @@ namespace Sinbad
                     string[] pairs = v.Split('|');
                     foreach (string pair in pairs)
                     {
+                        if(pair.Length == 0)
+                        {
+                            break;
+                        }
                         string[] p = pair.Split(':');
                         if (p.Length != 2)
                         {

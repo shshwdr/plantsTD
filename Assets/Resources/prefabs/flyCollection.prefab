@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4418941831928530915}
   - component: {fileID: 4418941831928530914}
   - component: {fileID: 1361096409221648856}
-  - component: {fileID: 1361096409221648855}
   - component: {fileID: 7785298418078397546}
   m_Layer: 0
   m_Name: flyCollection
@@ -101,23 +100,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.16
---- !u!114 &1361096409221648855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4418941831928530925}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 017b38950711ed34b83a6f3c1e0b955a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resource: []
-  speed: 6
-  amplitude: 0.1
-  needClick: 0
-  fullGameobject: {fileID: 4418941831928530925}
 --- !u!95 &7785298418078397546
 Animator:
   serializedVersion: 3

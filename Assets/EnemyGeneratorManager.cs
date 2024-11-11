@@ -9,7 +9,7 @@ public class EnemyGeneratorManager : Singleton<EnemyGeneratorManager>
     public GameObject enemyPrefab;
 
     public float generateDistance = 5;
-    public int currentLevel = 0;
+    public int currentRound = 0;
     public int currentWave = 0;
 
     List<List<Dictionary<string, int>>> enemyGeneratorInfos;
@@ -30,7 +30,7 @@ public class EnemyGeneratorManager : Singleton<EnemyGeneratorManager>
 
     void addEnemy(string type)
     {
-        var go = Instantiate(Resources.Load<GameObject>("human/"+type), transform.position + new Vector3(-generateDistance /*+ Random.Range(-2f, 2f)*/, Random.Range(-0.1f, 0.1f), 0), Quaternion.identity);
+        var go = Instantiate(Resources.Load<GameObject>("human/"+type), transform.position + new Vector3(HouseManager.Instance.currentHouse.position.x+ -generateDistance /*+ Random.Range(-2f, 2f)*/, Random.Range(-0.1f, 0.1f), 0), Quaternion.identity);
         //generateDistance = -generateDistance;
         go.GetComponent<Human>().init(type);
         SFXManager.Instance.HumanSpawn();
@@ -47,7 +47,7 @@ public class EnemyGeneratorManager : Singleton<EnemyGeneratorManager>
         yield return new WaitForSeconds(GameManager.Instance.startWaveInterval);
         while (true)
         {
-            var currentInfo = enemyGeneratorInfos[currentLevel][currentWave];
+            var currentInfo = enemyGeneratorInfos[currentRound][currentWave];
 
             SFXManager.Instance.WaveStart();
             foreach (var pair in currentInfo)
@@ -60,9 +60,18 @@ public class EnemyGeneratorManager : Singleton<EnemyGeneratorManager>
             }
             yield return new WaitForSeconds(GameManager.Instance.waveInterval);
             currentWave++;
-            if(currentWave>= enemyGeneratorInfos[currentLevel].Count)
+            if(currentWave>= enemyGeneratorInfos[currentRound].Count)
             {
-                currentWave = 0;
+                if(currentRound>= enemyGeneratorInfos.Count)
+                {
+
+                    currentWave = 0;
+                }
+                else
+                {
+                    currentRound++;
+                    EventPool.Trigger("upgradeRound");
+                }
             }
         }
 
@@ -158,7 +167,7 @@ public class EnemyGeneratorManager : Singleton<EnemyGeneratorManager>
 
     public void upgradeLevel()
     {
-        currentLevel++;
+        currentRound++;
         EventPool.Trigger("changeLevel");
         
     }
